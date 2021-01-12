@@ -36,9 +36,9 @@ def integrate(f: Callable[[float], float],
 
 Например, nzhukov.github.io
 #### Решение
-### ЛР 4
-### ЛР 5
-### ЛР 6
+### [ЛР 4](https://github.com/TsirulikIvan/PROG7-LR4)
+### [ЛР 5](https://github.com/TsirulikIvan/PROG7-LR5)
+### [ЛР 6](https://github.com/TsirulikIvan/PROG7-LR6)
 ## Список ИСР и ВСР
 ### ИСР1.1-1.2
 #### Постановка задачи
