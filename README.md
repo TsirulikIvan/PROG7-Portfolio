@@ -87,27 +87,20 @@ def run_in_threads(n_th=2):
 ```
 #### [Решение](https://repl.it/@RandiSPB/RoyalChartreuseMozbot#main.py)
 ```python
-import threading
 from concurrent.futures import ThreadPoolExecutor
-
 
 def matrix_multiply(X, Y):
     assert len(X) == len(Y), 'Попытка перемножить вектора разной длины'
-    return list(map(lambda x, y: x * y, X, Y))
-
-t = threading.Thread(
-    target=matrix_multiply, args=((1, 2, 3), (4, 5, 6))).start()
-
+    return [[sum(a * b for a, b in zip(i, j)) for j in zip(*Y)] for i in X]
 
 A = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
 B = [(9, 8, 7), (6, 5, 4), (3, 2, 1)]
 
 
 def run_in_threads(func, args, n_th=2):
-    result = None
     with ThreadPoolExecutor(max_workers=n_th) as executor:
-        result = executor.map(func, *args)
-    return list(result)
+        future = executor.submit(func, *args)
+    return future.result()
 
 try:
   print(run_in_threads(matrix_multiply, (A, B), len(A)))
