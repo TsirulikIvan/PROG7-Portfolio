@@ -153,6 +153,58 @@ s = writing_more('output.txt', 0, 200)
 print(s)
 ```
 #### Решение
+```python
+import csv
+import queue
+import random
+import threading
+
+def write_header(filename: str='data.csv'):
+    with open(filename, 'w') as csvfile:
+        fieldnames = ['Process number', 'value']
+        csv_writer = csv.writer(
+            csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL
+            )
+        csv_writer.writerow(fieldnames)
+
+
+def write_to_file(a, b, n_job=None, filename: str='data.csv', n_iter: int=2):
+    with open(filename, 'a') as csvfile:
+        csv_writer = csv.writer(
+            csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL
+            )
+        for i in range(n_iter):
+            n = random.randint(a, b)
+            csv_writer.writerow([str(n_job), str(n)])
+    return n
+
+
+def writing_more(a, b, *, filename: str='data.csv', n_jobs: int=2, n_iter: int=100):
+    que = queue.Queue()
+    step = (b - a) / n_jobs
+    threads = []
+    result = []
+    write_header(filename)
+    for i in range(n_jobs):
+        thread = threading.Thread(
+            target=lambda q, x, y, i: q.put(write_to_file(x, y, i)), args=(que, a + step * i, a + step * (i + 1), i)
+        )
+        thread.start()
+        print('thread {} started'.format(i))
+        threads.append(thread)
+
+    for th in threads:
+        print('thread joined')
+        th.join()
+
+    while not que.empty():
+        result.append(que.get())
+    
+    return result
+
+
+s = writing_more(0, 200)
+```
 ### ИСР3.1
 #### Постановка задачи
 Разработать быстрый асинхронный чат с использованием итераторов/генераторов
